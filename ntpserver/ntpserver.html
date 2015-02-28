@@ -1,0 +1,442 @@
+<!DOCTYPE html><html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<link rel="stylesheet" rev="stylesheet" href="../stylesheets/GitHub.css" type="text/css" media="all" /> 
+
+<title>NTPServer</title>
+
+</head>
+<body>
+<h1>建立自己的GPS时间服务器</h1>
+
+<p>ba5agkai at gmail.com 2015-02-28</p>
+
+<h1>1 准备树莓派</h1>
+
+<h2>1.1 下载烧录</h2>
+
+<p>从树莓派官网 <a href="http://raspberrypi.org">http://raspberrypi.org</a> 的下载页面下载Raspbian的最新版本。这次下载到的是2014年12月24日发布的版本。因为速度实在太慢，下了Torrent的种子，由bt软件去下载了。</p>
+
+<p>这次下载得到的文件是：2014-12-24-wheezy-raspbian.img 。</p>
+
+<p>准备了8G的SD卡，把SD卡插入Mac，先mount看一下：</p>
+
+<pre><code>/dev/disk2s1 on /Volumes/Untitled (ntfs, local, nodev, nosuid, read-only, noowners)
+</code></pre>
+
+<p>说明会这个SD卡被识别为/dev/disk2。</p>
+
+<p>在Finder里关闭这个盘，然后：</p>
+
+<pre><code>sudo dd if=2014-12-24-wheezy-raspbian.img of=/dev/disk2 bs=1m
+</code></pre>
+
+<p>dd完成后，这个盘会被自动mount回来，卷标是boot。打开，找到其中的cmdline.txt文件，编辑。将其中的</p>
+
+<pre><code>dwc_otg.lpm_enable=0 console=ttyAMA0,115200 kgdboc=ttyAMA0,115200 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait
+</code></pre>
+
+<p>改成</p>
+
+<pre><code>dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 elevator=deadline rootwait
+</code></pre>
+
+<p>这样就不会在启动时将串口用做终端了。</p>
+
+<h2>1.2 启动</h2>
+
+<p>上电后，在路由器管理页面上找到这个树莓派，将它的IP地址静态分配为192.168.1.21。</p>
+
+<p>ssh进入，默认用户pi，默认密码raspberry。先做基本配置：</p>
+
+<pre><code>sudo raspi-config
+</code></pre>
+
+<p>这些菜单项需要做一下：</p>
+
+<pre><code>1 Expand Filesystem
+    进去把SD卡扩展一下
+2 Change User Password
+    修改默认密码
+4 Internationalisation Options
+    I2 Change Timezone
+    修改为亚洲/上海
+8 Advanced Options
+    A2 Hostname 
+    修改为NTPSRV
+    A7 Serial
+    禁止串口上的shell
+</code></pre>
+
+<p>最后重启一下RPi。    </p>
+
+<p>因为RPi是默认装了ntpd的，所以再起来以后，你会发现时间已经是正确的了。</p>
+
+<h2>1.3 刷新</h2>
+
+<p>先来刷新、更新：</p>
+
+<pre><code>sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get dist-upgrade
+sudo rpi-update
+</code></pre>
+
+<p>做完后，检查一下：</p>
+
+<pre><code>uname -a
+</code></pre>
+
+<p>得到</p>
+
+<pre><code>Linux NTPSRV 3.12.35+ #733 PREEMPT Tue Jan 6 21:03:44 GMT 2015 armv6l GNU/Linux
+</code></pre>
+
+<h2>1.4 安装picocom</h2>
+
+<pre><code>sudo apt-get install picocom
+</code></pre>
+
+<p>然后就可以进picocom看一下：</p>
+
+<pre><code>picocom /dev/ttyAMA0
+</code></pre>
+
+<p>这是默认的开始界面：</p>
+
+<pre><code>picocom v1.7
+
+port is        : /dev/ttyAMA0
+flowcontrol    : none
+baudrate is    : 9600
+parity is      : none
+databits are   : 8
+escape is      : C-a
+local echo is  : no
+noinit is      : no
+noreset is     : no
+nolock is      : no
+send_cmd is    : sz -vv
+receive_cmd is : rz -vv
+imap is        : 
+omap is        : 
+emap is        : crcrlf,delbs,
+
+Terminal ready
+</code></pre>
+
+<p>Ctrl-A然后Ctrl-X退出picocom。</p>
+
+<h1>2 准备GPS模块</h1>
+
+<p>G3203是基于U-Blox NEO 5Q做的GPS板，板上除了UART输出的NMEA-0183数据外，也会输出PPS。</p>
+
+<p>图2-1是测试PPS信号的电路连线：
+<img src="images/2-1.JPG" alt="2-1">
+右边的USB串口板同时给GPS供电。示波器探头接在PPS输出上。G3203的J1的2脚标着TP，意思是time pulse，就是5Q的PPS输出。</p>
+
+<p>图2-2是PPS信号，从中可以看出每秒一个正脉冲：
+<img src="images/2-2.JPG" alt="2-2"></p>
+
+<p>图2-3是放大的PPS信号，从中可以看出脉冲宽度是100ms：
+<img src="images/2-3.JPG" alt="2-3"></p>
+
+<h1>3 连接GPS</h1>
+
+<p>图3-1是RPi的GPIO插座的定义：
+<img src="images/RPi-GPIOs.PNG" alt="2-3"></p>
+
+<p>可以看出，接GPS的串口数据时需要用到</p>
+
+<ul>
+<li>P1-04 5V Power</li>
+<li>P1-06 Gound</li>
+<li>P1-10 RXD</li>
+<li>P1-12 GPIO 18</li>
+</ul>
+
+<p>与G3203的J4连接如下：</p>
+
+<table><thead>
+<tr>
+<th>RPi</th>
+<th>G3203</th>
+<th>说明</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>P1-04</td>
+<td>J4-1</td>
+<td>5V</td>
+</tr>
+<tr>
+<td>P1-06</td>
+<td>J4-6</td>
+<td>Ground</td>
+</tr>
+<tr>
+<td>P1-10</td>
+<td>J4-2</td>
+<td>G3203&#39;s TXD -&gt; RPi&#39;s RXD</td>
+</tr>
+<tr>
+<td>P1-18</td>
+<td>J1-2</td>
+<td>PPS</td>
+</tr>
+</tbody></table>
+
+<p>连接完成后，在RPi上启动picocom，就能看到GPS的输出。</p>
+
+<h1>4 PPS</h1>
+
+<p>首先修改启动配置：</p>
+
+<pre><code>sudo vi /boot/cmdline.txt
+</code></pre>
+
+<p>在行末加上（用大写的A就可以直接到行末去添加）</p>
+
+<pre><code>bcm2708.pps_gpio_pin=18 
+</code></pre>
+
+<p>然后，</p>
+
+<pre><code>sudo vi /etc/modules
+</code></pre>
+
+<p>在最后加上：</p>
+
+<pre><code>pps-gpio
+</code></pre>
+
+<p>重启后，就可以看到/dev/pps0。lsmod也可以看到pps<em>gpio和pps</em>core两个模块了。</p>
+
+<p>安装pps-tools：</p>
+
+<pre><code>sudo apt-get install pps-tools
+</code></pre>
+
+<p>可以测试PPS了：</p>
+
+<pre><code>sudo ppstest /dev/pps0
+</code></pre>
+
+<p>得到：</p>
+
+<pre><code>trying PPS source &quot;/dev/pps0&quot;
+found PPS source &quot;/dev/pps0&quot;
+ok, found 1 source(s), now start fetching data...
+source 0 - assert 1421066632.974111422, sequence: 1698 - clear  0.000000000, sequence: 0
+source 0 - assert 1421066633.974045488, sequence: 1699 - clear  0.000000000, sequence: 0
+</code></pre>
+
+<h1>5 gpsd</h1>
+
+<p>安装gpsd：</p>
+
+<pre><code>sudo apt-get install gpsd gpsd-clients python-gps
+</code></pre>
+
+<p>启动gpsd：</p>
+
+<pre><code>sudo gpsd /dev/ttyAMA0 -n -F /var/run/gpsd.sock
+</code></pre>
+
+<p>查看gps数据：</p>
+
+<pre><code>cgps -s 
+</code></pre>
+
+<p>得到：</p>
+
+<pre><code>┌───────────────────────────────────────────┐┌─────────────────────────────────┐
+│    Time:       2015-01-12T13:11:51.000Z   ││PRN:   Elev:  Azim:  SNR:  Used: │
+│    Latitude:    30.282909 N               ││   3    17    263    34      Y   │
+│    Longitude:  120.106591 E               ││   8    54    346    31      Y   │
+│    Altitude:   55.9 m                     ││   9    00    323    00      Y   │
+│    Speed:      0.0 kph                    ││  14    18    150    41      Y   │
+│    Heading:    0.0 deg (true)             ││  16    60    279    37      Y   │
+│    Climb:      0.0 m/min                  ││  19    06    196    16      Y   │
+│    Status:     3D FIX (13 secs)           ││  20    06    293    00      Y   │
+│    Longitude Err:   +/- 2 m               ││  21    07    098    00      Y   │
+│    Latitude Err:    +/- 2 m               ││                                 │
+│    Altitude Err:    +/- 6 m               ││                                 │
+│    Course Err:      n/a                   ││                                 │
+│    Speed Err:       +/- 17 kph            ││                                 │
+│    Time offset:     0.639                 ││                                 │
+│    Grid Square:     PM00bg                ││                                 │
+└───────────────────────────────────────────┘└─────────────────────────────────┘
+</code></pre>
+
+<p>配置gpsd会在系统启动时装载：</p>
+
+<pre><code>sudo dpkg-reconfigure gpsd
+</code></pre>
+
+<p>注意当询问运行选项时，要加上-n来保证启动的时候会连接GPS。</p>
+
+<h1>6 编译一个支持PPS的ntpd</h1>
+
+<p>RPi自带的nptd是一个裁剪版，不支持PPS，所以得自己下载源码编译一个。</p>
+
+<p>先安装libcap-dev：</p>
+
+<pre><code>sudo apt-get install libcap-dev
+</code></pre>
+
+<p>然后从：
+<a href="">http://archive.ntp.org/ntp4/</a>
+找到最新的ntpd版本，下载在rpi上：</p>
+
+<pre><code>wget http://archive.ntp.org/ntp4/ntp-4.2.8p1.tar.gz
+</code></pre>
+
+<p>解压、配置、编译：</p>
+
+<pre><code>tar xzf ntp-4.2.8p1.tar.gz
+cd ntp-4.2.8p1/
+./configure --enable-linuxcaps
+</code></pre>
+
+<p>配置要花不少时间，在我的RPi上用了13分钟。</p>
+
+<p>然后make：</p>
+
+<pre><code>make
+</code></pre>
+
+<p>编译也要不少时间，我用了20分钟。先安装到/usr/local：</p>
+
+<pre><code>sudo make install   
+</code></pre>
+
+<p>停下现在的ntpd：</p>
+
+<pre><code>sudo service ntp stop
+</code></pre>
+
+<p>拷贝文件：</p>
+
+<pre><code>sudo cp /usr/local/bin/ntp* /usr/bin/
+sudo cp /usr/local/sbin/ntp* /usr/sbin/
+</code></pre>
+
+<p>启动ntpd:</p>
+
+<pre><code>sudo service ntp start
+</code></pre>
+
+<h1>6 连接ntpd和gpsd</h1>
+
+<p>编辑ntp.conf:</p>
+
+<pre><code>sudo vi /etc/ntp.conf
+</code></pre>
+
+<p>在所有的server行之前加上：</p>
+
+<pre><code># Server from shared memory provided by gpsd
+ server 127.127.28.0 minpoll 4 maxpoll 4
+ fudge 127.127.28.0 time1 0.000 refid GPS stratum 15
+
+# Kernel-mode PPS ref-clock for the precise seconds
+ server 127.127.22.0 minpoll 4 maxpoll 4
+ fudge 127.127.22.0  flag3 1  refid PPS   
+</code></pre>
+
+<p>并把原本的4行server改成：</p>
+
+<pre><code>server 0.debian.pool.ntp.org minpoll 10 maxpoll 15 iburst prefer
+server 1.debian.pool.ntp.org minpoll 10 maxpoll 15 iburst
+server 2.debian.pool.ntp.org minpoll 10 maxpoll 15 iburst
+server 3.debian.pool.ntp.org minpoll 10 maxpoll 15 iburst
+</code></pre>
+
+<p>然后重新启动ntpd：</p>
+
+<pre><code>sudo service ntp restart
+</code></pre>
+
+<p>查看一下ntpd的连接情况：</p>
+
+<pre><code>ntpq -crv -p
+
+associd=0 status=011b leap_none, sync_pps, 1 event, leap_event,
+version=&quot;ntpd 4.2.8p1@1.3265 Thu Feb 26 13:54:39 UTC 2015 (1)&quot;,
+processor=&quot;armv6l&quot;, system=&quot;Linux/3.12.35+&quot;, leap=00, stratum=1,
+precision=-18, rootdelay=0.000, rootdisp=1.165, refid=PPS,
+reftime=d899ab44.a7651f4e  Thu, Feb 26 2015 22:25:08.653,
+clock=d899ab50.198f4bd4  Thu, Feb 26 2015 22:25:20.099, peer=64998, tc=4,
+mintc=3, offset=0.187453, frequency=-42.887, sys_jitter=0.362315,
+clk_jitter=18.806,  clk_wander=0.120
+ remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ SHM(0)          .GPSD.          15 l   13   16  377    0.000  -129.68   1.609
+oPPS(0)          .PPS.            0 l   12   16  377    0.000    0.187   0.362
+*dns.sjtu.edu.cn 79.213.241.147   3 u   34   32   41   15.281   -0.708  76.747
++dns1.synet.edu. 202.118.1.46     2 u    7   32   27   53.652   -0.970  75.937  
+</code></pre>
+
+<p>需要等候一点时间才会看到PPS起作用。</p>
+
+<p>这里的字段含义是：</p>
+
+<ul>
+<li>remote:ntp 的主机或主机名称，&quot;+&quot;表示当前正在作用的上层ntp,”*“表示有连上线，但作为次要的ntp主机。</li>
+<li>refid:参考的上层ntp主机地址。</li>
+<li>st:stratum阶层。类似于 DNS,由大至小。</li>
+<li>when:几秒前做过时间同步。</li>
+<li>poll:下一次更新在几秒之后。</li>
+<li>reach:已经上层NTP服务器要求更新的次数。</li>
+<li>delay:网络传输过程中延迟的时间，单位为百万分之一秒。</li>
+<li>offset:时间补偿的结果，单位为百万分之一秒。</li>
+<li>jitter:系统时间与BIOS硬件时间的差异时间。</li>
+</ul>
+
+<p>注意到这里GPS的数据有130ms的误差，重新编辑ntp.conf，把这个误差做进去：</p>
+
+<pre><code>fudge 127.127.28.0 time1 +0.130 refid GPSD stratum 15
+</code></pre>
+
+<h1>7 对外提供ntpd服务</h1>
+
+<p>再次编辑/etc/ntp.conf，找到restrict段：</p>
+
+<pre><code># Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1
+restrict ::1
+</code></pre>
+
+<p>在其后加上：</p>
+
+<pre><code>restrict 192.168.1.0 mask 255.255.255.0 nomodify
+</code></pre>
+
+<p>这样就允许本地LAN内的机器获得时间数据了。</p>
+
+<p>如果在上面那条配置中，把最后的nomodify去掉，则可以从本地机器上直接查看ntpd的情况，如：</p>
+
+<pre><code>ntpq -p 192.168.1.21
+</code></pre>
+
+<p>如果你的ntp服务器的ip是21的话。</p>
+
+<p>在Windows上，可以调整Internet时间服务器的地址为自己的：</p>
+
+<p><img src="images/7-1.PNG" alt=""></p>
+
+<h1>参考文献</h1>
+
+<ol>
+<li><p>gpsd — a GPS service daemon，<a href="">http://catb.org/gpsd/</a></p></li>
+<li><p>The Raspberry Pi as a Stratum-1 NTP Server， <a href="">http://www.satsignal.eu/ntp/Raspberry-Pi-NTP.html</a></p></li>
+<li><p>GPSD Time Service HOWTO，<a href="">http://catb.org/gpsd/gpsd-time-service-howto.html</a></p></li>
+</ol>
+
+
+</body>
+
+</html>
