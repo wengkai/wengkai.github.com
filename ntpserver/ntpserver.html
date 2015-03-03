@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <link rel="stylesheet" rev="stylesheet" href="../stylesheets/GitHub.css" type="text/css" media="all" /> 
-
-<title>NTPServer</title>
+<title>ntp服务器的搭建</title>
 
 </head>
 <body>
 <h1>建立自己的GPS时间服务器</h1>
-
 <p>ba5agkai at gmail.com 2015-02-28</p>
+
+<p><img src="images/0.jpg" alt=""></p>
 
 <h1>1 准备树莓派</h1>
 
@@ -134,7 +134,7 @@ Terminal ready
 <p>G3203是基于U-Blox NEO 5Q做的GPS板，板上除了UART输出的NMEA-0183数据外，也会输出PPS。</p>
 
 <p>图2-1是测试PPS信号的电路连线：
-<img src="images/2-1.jpg" alt="2-1">
+<img src="images/2-1.JPG" alt="2-1">
 右边的USB串口板同时给GPS供电。示波器探头接在PPS输出上。G3203的J1的2脚标着TP，意思是time pulse，就是5Q的PPS输出。</p>
 
 <p>图2-2是PPS信号，从中可以看出每秒一个正脉冲：
@@ -146,7 +146,7 @@ Terminal ready
 <h1>3 连接GPS</h1>
 
 <p>图3-1是RPi的GPIO插座的定义：
-<img src="images/3-1.PNG" alt="2-3"></p>
+<img src="images/RPi-GPIOs.PNG" alt="2-3"></p>
 
 <p>可以看出，接GPS的串口数据时需要用到</p>
 
@@ -189,6 +189,8 @@ Terminal ready
 </tbody></table>
 
 <p>连接完成后，在RPi上启动picocom，就能看到GPS的输出。</p>
+
+<p><img src="images/3-2.jpg" alt=""></p>
 
 <h1>4 PPS</h1>
 
@@ -426,7 +428,7 @@ restrict ::1
 
 <p>在Windows上，可以调整Internet时间服务器的地址为自己的：</p>
 
-<p><img src="images/7-1.png" alt=""></p>
+<p><img src="images/7-1.PNG" alt=""></p>
 
 <h1>参考文献</h1>
 

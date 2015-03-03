@@ -1,4 +1,6 @@
-建立自己的GPS时间服务器
+#建立自己的GPS时间服务器
+
+![](images/0.jpg)
 
 # 1 准备树莓派
 
@@ -140,6 +142,8 @@ P1-10  | J4-2  | G3203's TXD -> RPi's RXD
 P1-18  | J1-2  | PPS
 
 连接完成后，在RPi上启动picocom，就能看到GPS的输出。
+
+![](images/3-2.jpg)
 
 # 4 PPS
 
