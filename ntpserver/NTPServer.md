@@ -111,14 +111,14 @@ Ctrl-A然后Ctrl-X退出picocom。
 G3203是基于U-Blox NEO 5Q做的GPS板，板上除了UART输出的NMEA-0183数据外，也会输出PPS。
 
 图2-1是测试PPS信号的电路连线：
-![2-1](images/2-1.JPG)
+![2-1](images/2-1.jpg)
 右边的USB串口板同时给GPS供电。示波器探头接在PPS输出上。G3203的J1的2脚标着TP，意思是time pulse，就是5Q的PPS输出。
 
 图2-2是PPS信号，从中可以看出每秒一个正脉冲：
-![2-2](images/2-2.JPG)
+![2-2](images/2-2.jpg)
 
 图2-3是放大的PPS信号，从中可以看出脉冲宽度是100ms：
-![2-3](images/2-3.JPG)
+![2-3](images/2-3.jpg)
 
 # 3 连接GPS
 
