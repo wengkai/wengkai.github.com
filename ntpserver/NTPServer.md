@@ -123,7 +123,7 @@ G3203是基于U-Blox NEO 5Q做的GPS板，板上除了UART输出的NMEA-0183数�
 # 3 连接GPS
 
 图3-1是RPi的GPIO插座的定义：
-![2-3](images/RPi-GPIOs.PNG)
+![2-3](images/3-1.png)
 
 可以看出，接GPS的串口数据时需要用到
 
@@ -346,7 +346,7 @@ RPi自带的nptd是一个裁剪版，不支持PPS，所以得自己下载源码�
 
 在Windows上，可以调整Internet时间服务器的地址为自己的：
 
-![](images/7-1.PNG)
+![](images/7-1.png)
 
 # 参考文献
 
