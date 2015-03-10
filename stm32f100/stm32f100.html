@@ -1,0 +1,33 @@
+<!DOCTYPE html><html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<link rel="stylesheet" rev="stylesheet" href="../stylesheets/GitHub.css" type="text/css" media="all" /> 
+
+<title>stm32f100</title>
+
+</head>
+<body>
+<h1>STM32F100C8</h1>
+
+<p>ba5ag.kai at gmail.com 2014-04-22</p>
+
+<p>这是一块非主流的片子，作为Cortex-M3系列的成员，它的最高主频只有24MHz，只是常见的103的1/3，它没有USB支持。但是，我喜欢它的理由是，它是LQFP48封装。小，就是理由。</p>
+
+<p>100C8有64k flash和8k SRAM，7个16位定时器，10路12位ADC，2个12位DAC，2个SPI，2个I2C，3个USART。这些外设足以满足大多数应用，尤其是它有3个串口，还有DAC。目前的价格已经在8块左右了，如果最终应用允许，它还有flash容量更小的C4、C6型号可选，也有容量更大的CB，不过再往上就不是48脚的了。</p>
+
+<p>虽然STM32F050之类的Cortex-M0芯片更便宜，甚至主频更高，还有TSSOP20的小片子，但是小片子就没有DAC，也没有3个串口，有DAC也有三个串口的也要48甚至64脚，价格和100C8也差不多了。</p>
+
+<p>所以，我们来试试100C8吧。</p>
+
+<ul>
+<li><p><a href="make.html">如何配置编译环境</a></p></li>
+<li><p><a href="startup.html">上电启动代码</a></p></li>
+<li><p><a href="sysinit.html">系统初始化</a></p></li>
+</ul>
+
+
+</body>
+
+</html>
