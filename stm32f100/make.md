@@ -2,7 +2,7 @@
 
 ba5ag.kai at gmail.com 2014-04-22
 
-首先从lauchpad.net下载最新的gcc-arm-none-eabi，我这次是`gcc-arm-none-eabi-4_8-2014q1-20140314-mac.tar.bz2`，解开后放在`/usr/local/gnuarm`下。因为解开后的目录带时间戳，所以专门做一个-s链接给它，这样以后万一有新版本出来可以方便点：
+首先从[launchpad.net](https://launchpad.net/gcc-arm-embedded)下载最新的gcc-arm-none-eabi，我这次是`gcc-arm-none-eabi-4_8-2014q1-20140314-mac.tar.bz2`，解开后放在`/usr/local/gnuarm`下。因为解开后的目录带时间戳，所以专门做一个-s链接给它，这样以后万一有新版本出来可以方便点：
 
 	gcc-arm-none-eabi -> gcc-arm-none-eabi-4_7-2012q4/
 
