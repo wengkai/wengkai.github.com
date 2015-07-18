@@ -205,6 +205,8 @@ Gitolite并没有实现一个常见的GUI或Web的管理界面，它的做法是
 
 在管理机的本地仓库中做了任何的修改，都必须提交并推到服务器后才能生效：
 
+	git add conf
+	git add keydir
 	git commit
 	git push
 	
