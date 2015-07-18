@@ -120,7 +120,7 @@ Gitolite是一个git服务管理工具，通过ssh协议公钥对用户进行认
 
 这样就在~git/建立了一个gitolite目录，然后，执行
 	
-	gitolite/install -ln
+	gitolite/install -ln ~/bin
 	
 这样会在~git/bin下建立一个gitolite的链接，指到~git/gitolite。
 
