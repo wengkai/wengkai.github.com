@@ -58,7 +58,7 @@ $ git config --global user.email &lt;your email&gt;
 <pre><code>sudo adduser --system --shell /bin/bash --group git
 </code></pre>
 
-<p>在git的家目录里创建一个.ssh文件，并且把文件的权限做成700，即只有自己可以进入。在这个目录中touch一个authorized_keys：</p>
+<p>在git的家目录里创建一个.ssh目录，并且把目录的权限做成700，即只有自己可以进入。在这个目录中touch一个authorized_keys：</p>
 
 <pre><code>touch authorized_keys
 </code></pre>
@@ -138,7 +138,7 @@ Host gitserver-sh
 
 <p>在服务器上以git登陆后，用git来下载：</p>
 
-<pre><code>git://github.com/sitaramc/gitolite
+<pre><code>git clone git://github.com/sitaramc/gitolite
 </code></pre>
 
 <p>这样就在~git/建立了一个gitolite目录，然后，执行</p>
