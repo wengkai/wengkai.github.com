@@ -1,0 +1,295 @@
+<!DOCTYPE html><html>
+
+<head>
+<meta charset="utf-8">
+<title></title>
+<style>
+html,body{ font-family: "SF UI Display", ".PingFang SC","PingFang SC", "Neue Haas Grotesk Text Pro", "Arial Nova", "Segoe UI", "Microsoft YaHei", "Microsoft JhengHei", "Helvetica Neue", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "Hiragino Sans GB", sans-serif;
+  font-size: 16px;
+  color:#222
+  -webkit-text-size-adjust:none;  min-width: 200px;
+  max-width: 760px;
+  margin: 0 auto; padding: 1rem;
+  line-height: 1.5rem;
+
+}
+h1,h2,h3,h4,h5,h6{font-family: "PT Sans","SF UI Display", ".PingFang SC","PingFang SC", "Neue Haas Grotesk Text Pro", "Arial Nova", "Segoe UI", "Microsoft YaHei", "Microsoft JhengHei", "Helvetica Neue", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "Hiragino Sans GB", sans-serif;
+text-rendering:optimizelegibility;margin-bottom:1em;font-weight:bold; line-height: 1.8rem;
+
+}
+h1,h2{position:relative;padding-top:1rem;padding-bottom:0.2rem;margin-bottom:1rem;background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAABCAYAAACsXeyTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAFUlEQVQIHWNIS0sr/v//PwMMDzY+ADqMahlW4J91AAAAAElFTkSuQmCC') bottom left repeat-x;}
+h2{padding-top:0.8rem;padding-bottom:0.2rem;}
+h1{ font-size: 1.6rem;}
+h2{ font-size: 1.4rem;}
+h3{ font-size: 1.2rem;}
+h4{ font-size: 1.1rem;}
+h5{ font-size: 1.0rem;}
+h6{ font-size: 0.9rem;}
+
+table{border-collapse:collapse;border-spacing:0;
+  margin-top: 0.8rem;
+  margin-bottom: 1.4rem;
+}
+tr{  background-color: #fff;
+  border-top: 1px solid #ccc;}
+th,td{padding: 5px 14px;
+  border: 1px solid #ddd;}
+
+blockquote{font-style:italic;font-size:1.1em;line-height:1.5em;padding-left:1em; border-left:4px solid #D5D5D5;    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 1.5rem; }
+
+a{color:#1863a1}
+
+pre,code,p code,li code{font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace}
+
+pre{-webkit-border-radius:0.4em;-moz-border-radius:0.4em;-ms-border-radius:0.4em;-o-border-radius:0.4em;border-radius:0.4em;border:1px solid #e7dec3;line-height:1.45em;font-size:0.9rem;margin-bottom:2.1em;padding:.8em 1em;color:#586e75;overflow:auto; background-color:#fdf6e3;}
+
+p code,li code{display:inline-block;white-space:no-wrap;background:#fff;font-size:0.9rem;line-height:1.5em;color:#555;border:1px solid #ddd;-webkit-border-radius:0.4em;-moz-border-radius:0.4em;-ms-border-radius:0.4em;-o-border-radius:0.4em;border-radius:0.4em;padding:0 .3em;margin:-1px 4px;}
+p pre code,li pre code{font-size:1em !important;background:none;border:none}
+
+img{max-width:100%;-webkit-border-radius:0.3em;-moz-border-radius:0.3em;-ms-border-radius:0.3em;-o-border-radius:0.3em;border-radius:0.3em;-webkit-box-shadow:rgba(0,0,0,0.15) 0 1px 4px;-moz-box-shadow:rgba(0,0,0,0.15) 0 1px 4px;box-shadow:rgba(0,0,0,0.15) 0 1px 4px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border:#fff 0.5em solid}
+
+
+hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+
+/*
+
+Orginal Style from ethanschoonover.com/solarized (c) Jeremy Hull <sourdrums@gmail.com>
+
+*/
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #fdf6e3;
+  color: #657b83;
+  -webkit-text-size-adjust: none;
+}
+
+.hljs-comment,
+.diff .hljs-header,
+.hljs-doctype,
+.hljs-pi,
+.lisp .hljs-string {
+  color: #93a1a1;
+}
+
+/* Solarized Green */
+.hljs-keyword,
+.hljs-winutils,
+.method,
+.hljs-addition,
+.css .hljs-tag,
+.hljs-request,
+.hljs-status,
+.nginx .hljs-title {
+  color: #859900;
+}
+
+/* Solarized Cyan */
+.hljs-number,
+.hljs-command,
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-rule .hljs-value,
+.hljs-doctag,
+.tex .hljs-formula,
+.hljs-regexp,
+.hljs-hexcolor,
+.hljs-link_url {
+  color: #2aa198;
+}
+
+/* Solarized Blue */
+.hljs-title,
+.hljs-localvars,
+.hljs-chunk,
+.hljs-decorator,
+.hljs-built_in,
+.hljs-identifier,
+.vhdl .hljs-literal,
+.hljs-id,
+.css .hljs-function,
+.hljs-name {
+  color: #268bd2;
+}
+
+/* Solarized Yellow */
+.hljs-attribute,
+.hljs-variable,
+.lisp .hljs-body,
+.smalltalk .hljs-number,
+.hljs-constant,
+.hljs-class .hljs-title,
+.hljs-parent,
+.hljs-type,
+.hljs-link_reference {
+  color: #b58900;
+}
+
+/* Solarized Orange */
+.hljs-preprocessor,
+.hljs-preprocessor .hljs-keyword,
+.hljs-pragma,
+.hljs-shebang,
+.hljs-symbol,
+.hljs-symbol .hljs-string,
+.diff .hljs-change,
+.hljs-special,
+.hljs-attr_selector,
+.hljs-subst,
+.hljs-cdata,
+.css .hljs-pseudo,
+.hljs-header {
+  color: #cb4b16;
+}
+
+/* Solarized Red */
+.hljs-deletion,
+.hljs-important {
+  color: #dc322f;
+}
+
+/* Solarized Violet */
+.hljs-link_label {
+  color: #6c71c4;
+}
+
+.tex .hljs-formula {
+  background: #eee8d5;
+}
+
+
+</style>
+
+<style> @media print{ .hljs{overflow: visible; word-wrap: break-word !important;} }</style></head><body><div class="markdown-body">
+<p>按键去抖动是Arduino程序的常见小问题。在<a href="https://www.arduino.cc" title="Arduino.cc">Arduino.cc</a>直接就有相关的教程（<a href="https://www.arduino.cc/en/Tutorial/Debounce" title="https://www.arduino.cc/en/Tutorial/Debounce">https://www.arduino.cc/en/Tutorial/Debounce</a>），可以搜到下面的代码。这段代码也出现在Arduino IDE的例子代码里，菜单选择：文件--&gt;示例--&gt;02.Digital--&gt;Debounce就有了。</p>
+
+<pre><code>void loop() {
+  // read the state of the switch into a local variable:
+  int reading = digitalRead(buttonPin);
+
+  // check to see if you just pressed the button
+  // (i.e. the input went from LOW to HIGH), and you&#39;ve waited long enough
+  // since the last press to ignore any noise:
+
+  // If the switch changed, due to noise or pressing:
+  if (reading != lastButtonState) {
+    // reset the debouncing timer
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) &gt; debounceDelay) {
+    // whatever the reading is at, it&#39;s been there for longer than the debounce
+    // delay, so take it as the actual current state:
+
+    // if the button state has changed:
+    if (reading != buttonState) {
+      buttonState = reading;
+
+      // only toggle the LED if the new button state is HIGH
+      if (buttonState == HIGH) {
+        ledState = !ledState;
+      }
+    }
+  }
+
+  // set the LED:
+  digitalWrite(ledPin, ledState);
+
+  // save the reading. Next time through the loop, it&#39;ll be the lastButtonState:
+  lastButtonState = reading;
+}
+</code></pre>
+
+<p>从技术层面讲，这代码当然没有任何问题，能做到去抖动。但是这只是解释原理的代码，一来它的交互场景未必和我们的设计需求相同，二来它不是工程性的代码。而且，这里的不少变量，如<code>lastDebounceTime</code>、<code>buttonState</code>都是全局变量，是工程代码大忌。</p>
+
+<p>先看需求。仔细分析代码发现，这段代码实现的是检测按钮按下或抬起，能给出按钮按下或抬起的稳定的状态。而我们的设计需要的是检测按钮被按下了，也就是按下后抬起了，在抬起的瞬间给出结论。所以，首先要对代码做技术改造，从而形成如下的第一个版本：</p>
+
+<pre><code>boolean isKeyPressed()
+{
+  static int btnState = HIGH;
+  static unsigned long lastDebounceTime = 0;  // the last time the button pin was toggled
+  static boolean isValid = false;
+  static const unsigned long debounceDelay = 50;
+  int reading = digitalRead(btnMode);
+  int ret = false;
+  
+  // If the switch changed, due to noise or pressing:
+  if ( reading != btnState ) {
+    lastDebounceTime = millis();
+    if ( isValid ) {
+      //  was valid and released now
+      ret = true;
+    }
+    isValid = false;
+    btnState = reading;
+  }
+
+  if ( reading == LOW &amp;&amp; (millis() - lastDebounceTime) &gt; debounceDelay ) {
+    //  been pressed longer enough
+    isValid = true;
+  }
+
+  return ret;
+}
+</code></pre>
+
+<p>这里btnMode是按钮的引脚编号。原始的代码是无论按下还是抬起均要改变状态，而这个版本是只在按下时记下状态<code>isValid</code>，然后在抬起时返回<code>true</code>。其实，这里把这段代码从<code>loop()</code>中提取出来，成为一个函数，并且把相关的持久存储的全局变量放进函数成为静态本地变量，这已经是向着工程化走了一步了。</p>
+
+<p>这段代码技术验证完成后，随即就遇到了一个工程问题：设计中有两个按钮，都需要用这个算法来去抖动，但是代码中的引脚编号、表示状态的三个静态本地变量都是为一个按钮硬编码的，因此还需要进步做工程化改造，成为下面这样的代码：</p>
+
+<pre><code>class Button {
+public:
+  Button(int pin, boolean pullup=true):btnPin(pin),btnState(pullup?HIGH:LOW),pressedValue(pullup?LOW:HIGH) {
+    pinMode(pin, pullup?INPUT_PULLUP:INPUT);
+  }
+  boolean isPressed() {
+    int reading = digitalRead(btnPin);
+    int ret = false;
+  
+    // If the switch changed, due to noise or pressing:
+    if ( reading != btnState ) {
+      lastDebounceTime = millis();
+      if ( isValid ) {
+        //  was valid and released now
+        ret = true;
+      }
+      isValid = false;
+      btnState = reading;
+    }
+
+    if ( reading == pressedValue &amp;&amp; (millis() - lastDebounceTime) &gt; debounceDelay ) {
+      //  been pressed longer enough
+      isValid = true;
+    }
+
+    return ret;
+  }
+private:
+  int btnPin;
+  int btnState;
+  int pressedValue;
+  unsigned long lastDebounceTime = 0;
+  boolean isValid = false;
+  const unsigned long debounceDelay = 50;
+};
+</code></pre>
+
+<p>这样把按钮做成了一个类，把检测过程中的状态变量用成员变量的方式来做持久存储，多个按钮的数据就这样简单地隔开了，而且检测函数成了成员函数，用起来也很方便。由于已经是一个类了，再要进一步做成库也是轻而易举的事情了。</p>
+
+<p>顺便说，这个检测算法是一个对其他任务友好的非占有型计算模型。每次调用检测函数，都不会长期占用CPU，几乎都是瞬间返回。算法本身所需的“延时”操作，是由外部大循环来实现的。在不断轮询检测按钮是否按下的间隙，CPU还有大量的机会去做其他任务的工作。在没有多任务操作系统的环境下，这样的设计是非常良好的。</p>
+
+</div></body>
+
+</html>
