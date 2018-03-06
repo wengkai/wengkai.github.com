@@ -1,0 +1,81 @@
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=gb2312">
+  <title>2108</title>
+  </head>
+  <body>
+<p>
+<h2>The CPU</h2>
+The Maverick<sup>TM</sup> <a href="http://www.cirrus.com/en/products/pro/detail/P139.html" target="_blank">EP7312</a> is 
+designed for ultra-low-power applications such as PDAs, two-way pagers, smart cellular phones or any hand-held device that 
+features the added capability of digital audio decompression.  The core-logic functionality of the device is built around an 
+ARM720T processor with 8 Kbytes of four-way set-associative unified cache and a write buffer. Incorporated into the ARM720T 
+is an enhanced memory management unit (MMU) which allows for support of sophisticated operating systems like 
+Microsoft<sup>TM</sup> Windows CE or Linux.
+<p>
+Bellows are EP7312’s brief features:
+<ul>
+	<li>ARM720T processor 
+	<ul>
+		<li>ARM7TDMI CPU 
+		<li>8 Kbytes of four-way set-associative cache 
+		<li>MMU with 64-entry TLB (translation look-aside buffer)  
+	</ul>
+	<li>Dynamically programmable clock speeds of 18, 36, 49, and 74 MHz at 2.5 V 
+	<li>Ultra low power: Designed for applications that require long battery life while using standard AA/AAA batteries or rechargeable cells 
+	<li>Advanced audio decoder / decompression capability: Improved DAI (Digital Audio Interface) providing glueless interface to low-power DACs, ADCs, and CODECs 
+	<li>SDRAM controller: Supports four internal memory banks totaling 256 Mbits in size 
+	<li>LCD controller inside.
+	<li>48 kbytes (0x9600) of on-chip SRAM for fast program execution and / or as a frame buffer 
+	<li>Synchronous serial interface: ADC (SSI) Interface: Master mode only; SPI? and Microwire1? -compatible (128 kbits/s operation) 
+	<li>On-chip ROM; for manufacturing support 
+	<li>27-bits of general-purpose I/O 
+	<li>Two UARTs (16550 type) 
+	<li>SIR (up to 115.2 kbits/s infrared encoder / decoder) 
+</ul>
+Combined with CS8900 NIC IC, it is the ideal chipset for our target.
+</p>
+<h2>The Hardware</h2>
+<p>
+The core is the EP7312 CPU with the CS8900 NIC IC.  Actually there is also a brand new IC: CS89712, which is definitely a combination of EP7312 and CS8900, the same as we used in the machine.  We had taken them into consideration and even designed for it.  But at the last minute, we give up because CS89712 has a quite small package style: PBGA 256, in which there are 256 pins as a 16 by 16 matrix right under the small chip.  The chip is only 1.5cm by 1.5cm.  It is so difficult to assemble it that the cost for assembling is quite high, 3 times than EP7312.
+</p><p>
+The CS8900 is a quite plain NIC IC, which directly connected to the data/address bus of EP7312.  Flash ROM is of one-byte width while the SDRAM is a double-byte one.  As we mentioned before, much decision is done by the fact of cost.  But keep a 16-bit RAM can do a lot benefit to the speed.
+</p><p>
+Codec chip, which is a simple 8-bit/8KHz PCM codec, is connected to the codec interface of EP7312 as required in the datasheet of EP7312.  The only thing we need to do here, is to find a proper codec chip with the pins and function defined by EP7312.  Luckily, there is a lot standard one.
+</p><p>
+The size of Flash ROM and SDRAM took a lot of time for us to make the decision.  For reason of cost, we use a 2MB ROM, while RAM can has a size of 16MB.
+</p><p>
+The CPU is such a low power chip that every thing becomes simple.  Because of the low power drain, designing for the power section of the whole machine is an easy job.  Because of the low power drain, there is much lower noise in the circle than other CPUs, especially than Intel x86 family chips.  This is very good.  Although the core speed is 75MHz in the chip, the clock is 3MHz and the speed of the bus is 18MHz.  These data reduce the difficulty of the wiring on the PCB.  The total result is a clean, cheap PCB layout that only employs 4 layers in a size of 10cm by 12cm.  And the most magic thing is that without a high-speed emulation, the PCB itself works so stable that we make the whole system run at the first time we solder all the parts on without any fly wire.  The low consume of power bring us much more benefit such as no need to consider the problem of heat.  We had powered it on for more than 72 hours.  And the surface of the CPU was quite cold after full cycle work as a web server during the past 72 hours.  There is no any heat sink at all and the power supply is a small wall adapter.
+</p>
+<h2>Software</h2>
+<p>
+I’d admit Cirrus Logic is a small company that they have less technical support than Intel, who produces more powerful StrongARM.  We got a Linux CD from Cirrus Logic with an out-of-date Linux kernel of 2.2.1.  The further worst thing is that there is a download tool in the CD without source code!  Checking all we have, we found the software job in four phases:
+<ol>
+	<li>Build a tool chain for EP7312.  Fortunately, there are plenty of resources in the Internet.  Simply download a suitable binary copy, minutes later we were ready.
+	<li>Write a “downloader” and a “bootloader”.  A downloader is program to download or say burn your binary data into the flash ROM.  A bootloader is a bit like a BIOS program in every PC.  It boots from the very beginning the machine power on.  Then decompress the compressed kernel and initrd to the RAM, and later bring the kernel up.  It also takes some hardware initialization tasks.
+	<li>Port the newest kernel to our board.  There is a lot of resource of porting Linux to ARM architecture.  But unfortunately, none of the exact EP7312.
+	<li>Make an initrd, or called RAM-disk for the root file system with least needed files.
+</ol>
+</p>
+The EP7312 has a small piece of internal ROM, in which firmed a small code that will run in BOOTSTRAP mode.  That piece of code will initialize the serial port and wait for binary data from serial port.  Then it stores a 2048-byte data into its internal static RAM and bring the new code up.
+</p><p>
+Thus our downloader works in a complex way.  The machine is connected to a PC with serial line, as well as Ethernet.  First step is plug the jumper on, then fire up the machine.  Our downloader then is going to send a small program of 2048-byte.  The 2048-byte seed then bring much more data from downloader program into the static RAM and jump there.  The later ask downloader a bootloader, which is to be put in the flash.  After that, the jumper should be removed and the machine restarted.  It will be bring up by the bootloader then.
+</p><p>
+Porting the kernel to our board is quite a huge job.  There is a porting to EP7110, a near relative of EP7312.  But at least these things are quite deferent:
+<ol>
+	<li>Memory map
+	<li>IO map and pin usage
+	<li>IRQs
+	<li>Our own devices’ drivers
+</ol>
+</p><p>
+Finally we have a Linux porting to the machine with kernel 2.4.3.  All the function works including the network, LCD, keypad and codec.  The detail is too complex to be explained here.
+</p><p>
+The initrd then is simple for there is a lot resource in the Internet.
+</p><p>
+The whole telephony program also is ported to the machine.  The application program is easy to port, because the Linux in the machine is a standard one.  This is the benefit to use Linux as the operating system: it is easy for application programmer.  They even need not to care that the machine is not an x86 PC.
+</p><p>
+The speed is good with clock rate at 75MHz.  The BogoMIPS reported by Linux is about 65MIPS.  
+</p>
+</body>
+</html>

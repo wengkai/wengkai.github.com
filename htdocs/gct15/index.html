@@ -1,0 +1,74 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=gb_2312-80">
+   <meta name="KeyWords" content="lpc2000 isp">
+   <title>LPC2000 ISP</title>
+</head>
+<body>
+<center><font face="宋体"><font size=+2>LPC2000烧录工具G-CT15</font></font></center>
+<hr>
+<font size=-1>购买G-CT15的
+<a href="http://item.taobao.com/item.htm?id=9072077386" target="_blank">PCB</a> | 
+套件 | 
+<a href="http://item.taobao.com/item.htm?id=9075706188" target="_blank">成品</a></font>
+</p><p>
+<img src="GCT15in.jpg" width="300" align="left"></img>
+<p>
+G-CT15是用于LPC2000系列ARM MCU的ISP工具。
+</p>
+<p>
+它除了实现RS232-TTL电平转换外，还由串口产生LPC的reset和bootp信号。
+这样，不起身开关电源、插拔跳线，就可以烧录和启动板子，甚至可以通过Windows远程桌面或Unix远程登录来远程烧录和调试硬件。
+</p>
+<p>
+与NXP的烧录工具不同的是，G-CT15的引脚定义，使得Windows的超级终端或Unix的minicom也能不拔线不跳线来运行程序，甚至可以由超级终端来重起硬件。
+板子右侧的6个引脚依次是：
+<table border="0">
+<tr><td>
+<ol>
+	<li>VDD：3.3v或&lt;15v。如果焊上背面的SPX3819，可以用于3.5~15v。直接用于G8201等板子时，目标板给的就是3.3v，这时就不需要背面的SPX3819。
+	<li>RXD：接MCU的RXD，G8201的3脚。
+	<li>TXD：接MCU的TXD，G8201的2脚。
+	<li>Reset：接MCU的reset，G8201的4脚。
+	<li>BootP：接MCU的BootP，G8201的5脚。
+	<li>GND，G8201的6脚。
+</ol>
+</td></tr>
+</table>
+</p>
+<p>
+我们提供了与G-CT15配合使用的烧录程序，运行需要JRE 1.6及以上Java运行库支持。运行时在命令行输入：
+<pre>
+java -jar Flasher.jar COM1 xx.hex 9600
+</pre>
+其中xx.hex为hex文件名，COM1为串口文件名，9600为程序启动后配置的串口速率。烧录完成后，会启动一个终端程序，可以与板上程序通信。</br>
+<blockquote><font size=-1>
+&gt;&gt;<a href="flasher.zip">下载烧录程序flash.jar</a>。
+</font></blockquote>
+</p>
+<p>
+也可以使用开源的lpc21isp，通过设置命令行参数来使用G-CT15。命令行如下：
+<div align="center"><pre>
+lpc21isp -wipe -control -controlinv xx.hex COM1 19200 11059
+</pre></div>
+其中，xx.hex为hex文件名，COM1为串口文件名，11059为板子上的晶振频率。
+lpc21isp可以在以下网址下载：</br>
+<a href="http://sourceforge.net/projects/lpc21isp/" target="_blank">http://sourceforge.net/projects/lpc21isp/</a></br>
+</p>
+<p>我们编译了二进制版本供下载：
+<blockquote><font size=-1>
+&gt;&gt;<a href="lpc21isp.win.zip">下载Windows用的lpc21isp</a></br>
+&gt;&gt;<a href="lpc21isp.mac.zip">下载MacOS用的lpc21isp</a>
+</font></blockquote>
+lpc21isp也可以用来做串口终端，对于没有预先安装超级终端的Windows用户会很方便。用作串口终端时的命令行参数如下：
+<div align="center"><pre>
+lpc21isp -termonly COM1 9600 11059
+</pre></div>
+</p>
+<p>
+G-CT15的板子尺寸为15x16mm，可以装进一个DB-9的塑壳中。</br>
+<img src="GCT15-2.jpg"></img>
+</p>
+</body>
+</html>

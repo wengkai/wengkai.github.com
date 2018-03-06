@@ -1,0 +1,325 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=gb_2312-80">
+   <meta name="KeyWords" content="amateur radio af filter">
+   <title>做一个窄带音频滤波器</title>
+</head>
+<body>
+
+<center><font face="宋体"><font size=+2>做一个窄带音频滤波器</font></font></center>
+<hr>
+<p><font size=+0><font face="宋体">对于一位</font>CW<font face="宋体">爱好者来说，窄带滤波器是最重要的武器之一。如果收发信机上没有装中频窄带滤波器，一个外接的音频滤波器就成了唯一的选择。传统的使用</font>LC<font face="宋体">回路或运放的模拟滤波器，最大的问题是带宽不容易做到很窄，带宽窄的时候很容易出现铃声效应。而且用运放做的滤波器对元件参数的要求也较严格。另外模拟滤波器的边沿不够陡，用起来总觉得差了一点点。</font></font>
+<p><font size=+0><font face="宋体">最新的技术当然是用</font>DSP<font face="宋体">，可以用专门的</font>DSP<font face="宋体">芯片制作滤波器，也可以用计算机软件，利用声卡来实现</font>DSP<font face="宋体">滤波。可是</font>DSP<font face="宋体">芯片的开发工具很贵，业余玩不起；用计算机，又总觉得不灵活。</font></font>
+<p><font size=+0><font face="宋体">在模拟滤波器和</font>DSP<font face="宋体">中间，还有一个选择，就是开关电容滤波器（</font>SCF<font face="宋体">）。</font></font>
+<p><img SRC="max267.gif" height=200 width=158 align=LEFT><font size=+0>Maxim<font face="宋体">公司的</font>MAX267<font face="宋体">是</font>Maxim<font face="宋体">众多</font>SCF<font face="宋体">芯片中较简洁的一种。它内部包含两个二阶的</font>SCF<font face="宋体">和一个运放。两个</font>SCF<font face="宋体">已经固定成带通型，并且使用相同的</font>Q<font face="宋体">参数和频率变换比例，这样就大大减少了外围电路，非常适合于简单的应用场合。把两个</font>SCF<font face="宋体">级联起来，就可以实现一个四阶的</font>SCF<font face="宋体">滤波器。通过选择适当的反馈电阻和</font>Q<font face="宋体">参数，能够组成不同波纹率的</font>Butterworth<font face="宋体">或</font>Chebyshev<font face="宋体">滤波器。</font></font>
+<p><a href="sch.gif"><img SRC="psch.gif" height=68 width=123 align=LEFT></a>
+<br><font size=+0><font face="宋体">本文给出的<a href="7902v3.zip">电路图</a>，是一个</font>3.0dB<font face="宋体">波纹的</font>Chebyshev<font face="宋体">滤波器，中心频率</font>600Hz<font face="宋体">，带宽</font>200Hz<font face="宋体">。频率源是</font>3MHz<font face="宋体">晶振经多次分频后得到。使用晶振做音频滤波器的频率控制是奢侈了一点，不过对于业余制作而言反而是简单了。即使没有频率计，只要计算正确，一定可以做出满意的滤波器来。如果用</font>555<font face="宋体">等芯片做频率源，校准频率并保持不变化可不是一件容易的活。</font></font>
+<p><font face="宋体"><font size=+0>如果想试一下其它的带宽，</font>下<font size=+0>表给出了</font></font><font size=+0>600Hz<font face="宋体">中心频率下常用带宽的元件数值。</font></font>
+<br>&nbsp;
+<center><table BORDER COLS=4 WIDTH="200" >
+<tr ALIGN=CENTER>
+<td WIDTH="50">带宽</td>
+
+<td WIDTH="40">R6</td>
+
+<td>R2</td>
+
+<td>Q6-Q0</td>
+</tr>
+
+<tr>
+<td>200Hz</td>
+
+<td ALIGN=RIGHT>150k</td>
+
+<td ALIGN=RIGHT>127k</td>
+
+<td>1111001</td>
+</tr>
+
+<tr>
+<td>250Hz</td>
+
+<td ALIGN=RIGHT>95k</td>
+
+<td ALIGN=RIGHT>81k</td>
+
+<td>1110111</td>
+</tr>
+
+<tr>
+<td>500Hz</td>
+
+<td ALIGN=RIGHT>24k</td>
+
+<td ALIGN=RIGHT>20k</td>
+
+<td>1101111</td>
+</tr>
+</table></center>
+
+<p><font size=+0><font face="宋体">这三种带宽都是我实际做过的。比</font>200Hz<font face="宋体">还要窄怎么样？我试过</font>150Hz<font face="宋体">，发现并不好，居然也有铃声效应。如果想改变中心频率，由于不同的中心频率下，相同带宽的</font>Q<font face="宋体">值不同，所以整个表还要重新计算，不是简单地改变分频比就可以改变中心频率。具体设计请参考</font>MAX267<font face="宋体">的芯片手册。本来这个滤波器的第一版本，是做了一个</font>750Hz<font face="宋体">中心频率，</font>250Hz<font face="宋体">、</font>500Hz<font face="宋体">、</font>1400Hz<font face="宋体">三种带宽可切换的，这样就可以兼顾</font>CW<font face="宋体">和</font>SSB<font face="宋体">。只是电路上颇烦琐，</font>Q0-Q6<font face="宋体">要通过二极管矩阵来切换。如果要做频率、带宽可变化的，最好是使用其他的</font>SCF<font face="宋体">芯片。</font></font>
+<p><font face="宋体">下表是全部的元件表：</font>
+<center><table BORDER CELLPADDING=2 WIDTH="404" >
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C1</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>20p</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C11</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>0.1<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="19"><font size=+0>J3</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>CON2</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>U1</font></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="19">
+<div align=right><font size=+0>MAX267</font></div>
+</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="21"><font size=+0>C2</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="21">
+<div align=right><font size=+0>20p</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="21"><font size=+0>C12</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="21">
+<div align=right><font size=+0>0.1<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="21"><font size=+0>R1</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="21">
+<div align=right><font size=+0>1M</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="21"><font size=+0>U2</font></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="21">
+<div align=right><font size=+0>CD4060</font></div>
+</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C3</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>2.5p</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C13</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>0.1<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="19"><font size=+0>R2</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>127k</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>U3</font></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="19">
+<div align=right><font size=+0>MC78L05CP</font></div>
+</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C4</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>4.7<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C14</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>0.1<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="19"><font size=+0>R3</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>10k</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>U4</font></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="19">
+<div align=right><font size=+0>LM386</font></div>
+</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C5</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>4.7<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C15</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>100<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="19"><font size=+0>R4</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>10k</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>U5</font></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="19">
+<div align=right><font size=+0>LM7812CT</font></div>
+</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C6</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>0.1<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C16</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>100<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="19"><font size=+0>R5</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>10k</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>W1</font></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="19">
+<div align=right><font size=+0>10k</font></div>
+</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C7</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>0.1<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C17</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>10n</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="19"><font size=+0>R6</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>150k</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>Y1</font></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="19">
+<div align=right><font size=+0>3MHz</font></div>
+</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C8</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>1<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C18</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>1n</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="19"><font size=+0>R7</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>4k7</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="19"></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C9</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>0.47<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>J1</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>CON2</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="19"><font size=+0>R8</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>4k7</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="19"></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>C10</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>0.47<font face="Symbol">m</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"><font size=+0>J2</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>CON3</font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="6%" HEIGHT="19"><font size=+0>R9</font></td>
+
+<td VALIGN=TOP WIDTH="15%" HEIGHT="19">
+<div align=right><font size=+0>10<font face="Symbol">W</font></font></div>
+</td>
+
+<td VALIGN=TOP WIDTH="9%" HEIGHT="19"></td>
+
+<td VALIGN=TOP WIDTH="23%" HEIGHT="19"></td>
+</tr>
+</table></center>
+
+<p><font size=+0><font face="宋体">线路本身很简单，我自己制作的时候甚至没有制作</font>PCB<font face="宋体">，而是用实验板，一种所有的焊盘都独立的实验板。设计</font>PCB<font face="宋体">时就按照要用实验板来搭的方式设计，所有的元件都分布在</font>2.5mm(100mil)<font face="宋体">间距的位置上，走线也比较疏。这样就很容易可以用剪下的元件脚在底面搭一个</font>PCB<font face="宋体">出来。</font>MAX267<font face="宋体">是窄的</font>24<font face="宋体">脚</font>DIP<font face="宋体">，可以用一个</font>16<font face="宋体">脚和一个</font>8<font face="宋体">脚的插座拼成一个窄</font>24<font face="宋体">脚</font>DIP<font face="宋体">插座。</font>PCB<font face="宋体">和面板之间用</font>CH2.5<font face="宋体">插座连接，不直接焊在板子上。整个板子装在一个</font>65<font face="Symbol">?</font>
+35<font face="Symbol">?</font> 100mm<font face="宋体">的塑料盒子里，加上电源插座、输入输出插座，和一个电源开关，就可以了。这里电源开关要兼做音频通路开关，关闭电源的时候，把输入直接接到输出去。</font></font>
+<p><font face="宋体"><font size=+0>从用综合测试仪分析的频谱图来看，基本上符合期望的结果。</font></font>
+<p><img SRC="res.gif" height=374 width=306 align=LEFT><font size=+0><font face="宋体">用这个滤波器最大的收获，倒不是原先打算的从几个贴得很近的信号中分离出需要的信号。最大的用处，是在</font>DX<font face="宋体">信号微弱时，从天电噪声中提升</font>CW<font face="宋体">信号。</font></font>
+</body>
+</html>
