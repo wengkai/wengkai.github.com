@@ -126,6 +126,8 @@ emap is        : crcrlf,delbs,
 
 Terminal ready
 </code></pre>
+    
+此时可以看到GPS模块的输出了。
 
 <p>Ctrl-A然后Ctrl-X退出picocom。</p>
 
@@ -205,6 +207,16 @@ Terminal ready
 </code></pre>
 
 <p>然后，</p>
+    
+#2020-12-19修改：
+    
+修改boot/config.txt，
+<pre><code>sudo vi /boot/config.txt
+</code></pre>
+在最后加上：
+<pre><code>dtoverlay=pps-gpio,gpiopin=18
+</code></pre>
+#end
 
 <pre><code>sudo vi /etc/modules
 </code></pre>
